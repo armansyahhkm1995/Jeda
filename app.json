@@ -1,25 +1,47 @@
 {
   "expo": {
-    "name": "jeda",
+    "name": "Jeda",
     "slug": "jeda",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icons/icon.png",
     "userInterfaceStyle": "light",
+    "scheme": "jeda",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false,
+      "bundleIdentifier": "com.jeda.app"
     },
     "android": {
+      "package": "com.jeda.app",
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/android-icon-foreground.png",
-        "backgroundImage": "./assets/android-icon-background.png",
-        "monochromeImage": "./assets/android-icon-monochrome.png"
+        "backgroundColor": "#F5F0EB",
+        "foregroundImage": "./assets/icons/adaptive-icon.png"
       },
       "predictiveBackGestureEnabled": false
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/icons/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-status-bar",
+      [
+        "expo-secure-store",
+        {
+          "faceIDPermission": "Allow Jeda to access Face ID for secure PIN."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icons/adaptive-icon.png",
+          "color": "#2D5A38"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
     }
   }
 }
