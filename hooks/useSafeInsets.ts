@@ -1,3 +1,4 @@
+import { StatusBar, Platform } from 'react-native';
 import { useSafeAreaInsets as useNativeSafeAreaInsets } from 'react-native-safe-area-context';
 
 /**
@@ -7,12 +8,16 @@ import { useSafeAreaInsets as useNativeSafeAreaInsets } from 'react-native-safe-
  */
 export function useSafeInsets() {
   const insets = useNativeSafeAreaInsets();
+  const androidBar = Platform.OS === 'android' ? (StatusBar.currentHeight ?? 28) : 0;
+  const safeTop = Platform.OS === 'android'
+    ? Math.max(insets.top, androidBar, 28)
+    : Math.max(insets.top, 20);
 
   return {
-    top: Math.max(insets.top, 16),
+    top: safeTop,
     bottom: Math.max(insets.bottom, 16),
-    left: Math.max(insets.left, 16),
-    right: Math.max(insets.right, 16),
+    left: Math.max(insets.left, 0),
+    right: Math.max(insets.right, 0),
     rawInsets: insets,
   };
 }

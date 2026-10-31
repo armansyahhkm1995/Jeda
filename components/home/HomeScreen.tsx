@@ -101,6 +101,7 @@ const styles = StyleSheet.create({
     paddingBottom: SPACING.xxl,
   },
   greetingHeader: {
+    marginTop: 6,
     marginBottom: SPACING.lg,
     paddingHorizontal: 2,
   },

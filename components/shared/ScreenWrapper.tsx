@@ -56,18 +56,24 @@ export default function ScreenWrapper({
     } = flattened;
 
     const baseTop = withTopInset ? top : 0;
-    const rawTop = stylePadTop ?? paddingVertical ?? padding ?? baseTop;
-    const finalTop = typeof rawTop === 'number' ? rawTop : (Number(rawTop) || 0);
+    const extraTop = stylePadTop ?? paddingVertical ?? padding ?? 0;
+    const numExtraTop = typeof extraTop === 'number' ? extraTop : (Number(extraTop) || 0);
+    const finalTop = baseTop + numExtraTop;
 
     // Tab bar clearance: at least 88px if withTabBar is true
     const baseBottom = withBottomInset ? bottom : 0;
     const extraBottom = withTabBar ? 88 : 32;
-    const rawBottom = stylePadBottom ?? paddingVertical ?? padding ?? baseBottom;
-    const numBottom = typeof rawBottom === 'number' ? rawBottom : (Number(rawBottom) || 0);
-    const finalBottom = numBottom + extraBottom;
+    const padBottom = stylePadBottom ?? paddingVertical ?? padding ?? 0;
+    const numPadBottom = typeof padBottom === 'number' ? padBottom : (Number(padBottom) || 0);
+    const finalBottom = baseBottom + extraBottom + numPadBottom;
 
-    const finalLeft = stylePadLeft ?? paddingHorizontal ?? padding ?? left;
-    const finalRight = stylePadRight ?? paddingHorizontal ?? padding ?? right;
+    const extraLeft = stylePadLeft ?? paddingHorizontal ?? padding ?? 0;
+    const numExtraLeft = typeof extraLeft === 'number' ? extraLeft : (Number(extraLeft) || 0);
+    const finalLeft = left + numExtraLeft;
+
+    const extraRight = stylePadRight ?? paddingHorizontal ?? padding ?? 0;
+    const numExtraRight = typeof extraRight === 'number' ? extraRight : (Number(extraRight) || 0);
+    const finalRight = right + numExtraRight;
 
     const layoutStyle: ViewStyle = {
       flexGrow: 1,
@@ -100,13 +106,36 @@ export default function ScreenWrapper({
     );
   }
 
+  const padTop = flattened.paddingTop ?? flattened.paddingVertical ?? flattened.padding ?? 0;
+  const numPadTop = typeof padTop === 'number' ? padTop : (Number(padTop) || 0);
+
+  const padBottom = flattened.paddingBottom ?? flattened.paddingVertical ?? flattened.padding ?? 0;
+  const numPadBottom = typeof padBottom === 'number' ? padBottom : (Number(padBottom) || 0);
+
+  const padLeft = flattened.paddingLeft ?? flattened.paddingHorizontal ?? flattened.padding ?? 0;
+  const numPadLeft = typeof padLeft === 'number' ? padLeft : (Number(padLeft) || 0);
+
+  const padRight = flattened.paddingRight ?? flattened.paddingHorizontal ?? flattened.padding ?? 0;
+  const numPadRight = typeof padRight === 'number' ? padRight : (Number(padRight) || 0);
+
+  const {
+    padding,
+    paddingHorizontal,
+    paddingVertical,
+    paddingTop,
+    paddingBottom,
+    paddingLeft,
+    paddingRight,
+    ...nonPaddingStyle
+  } = flattened;
+
   const containerStyle: ViewStyle = {
     flex: 1,
     backgroundColor,
-    paddingTop: withTopInset ? top : 0,
-    paddingBottom: (withBottomInset ? bottom : 0) + (withTabBar ? 88 : 0),
-    paddingLeft: left,
-    paddingRight: right,
+    paddingTop: (withTopInset ? top : 0) + numPadTop,
+    paddingBottom: (withBottomInset ? bottom : 0) + (withTabBar ? 88 : 0) + numPadBottom,
+    paddingLeft: left + numPadLeft,
+    paddingRight: right + numPadRight,
   };
 
   return (
@@ -115,7 +144,7 @@ export default function ScreenWrapper({
       style={{ flex: 1, backgroundColor }}
     >
       <StatusBar barStyle="dark-content" backgroundColor={backgroundColor} />
-      <View style={[containerStyle, style]}>{children}</View>
+      <View style={[containerStyle, nonPaddingStyle]}>{children}</View>
     </KeyboardAvoidingView>
   );
 }
