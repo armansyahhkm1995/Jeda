@@ -12,12 +12,14 @@ import Typography from '../ui/Typography';
 import { COLORS, SPACING, RADIUS } from '../../constants/theme';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useHaptics } from '../../hooks/useHaptics';
+import { useSafeInsets } from '../../hooks/useSafeInsets';
 
 export interface ChangePinScreenProps {
   onBack: () => void;
 }
 
 export default function ChangePinScreen({ onBack }: ChangePinScreenProps) {
+  const insets = useSafeInsets();
   const [currentPin, setCurrentPin] = useState('');
   const [newPin, setNewPin] = useState('');
   const [confirmPin, setConfirmPin] = useState('');
@@ -86,7 +88,7 @@ export default function ChangePinScreen({ onBack }: ChangePinScreenProps) {
   // SCREEN 5: State Sukses "PIN Berhasil Diperbarui"
   if (isSuccess) {
     return (
-      <View style={styles.successContainer}>
+      <View style={[styles.successContainer, { paddingTop: insets.top + 20, paddingBottom: insets.bottom + 20 }]}>
         <View style={styles.successContent}>
           {/* Large Circle with Checkmark */}
           <View style={styles.bigCheckCircle}>
@@ -128,7 +130,7 @@ export default function ChangePinScreen({ onBack }: ChangePinScreenProps) {
 
   // SCREEN 4: Form Ubah PIN Keamanan
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -303,7 +305,7 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingHorizontal: 22,
     paddingTop: 20,
-    paddingBottom: 40,
+    paddingBottom: 80,
   },
   instructionText: {
     fontSize: 14,

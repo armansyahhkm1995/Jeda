@@ -14,6 +14,7 @@ import Svg, { Path } from 'react-native-svg';
 import Typography from '../ui/Typography';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useHaptics } from '../../hooks/useHaptics';
+import { useSafeInsets } from '../../hooks/useSafeInsets';
 import { compressAvatarImage } from '../../utils/image-compression';
 
 export interface EditProfileScreenProps {
@@ -21,6 +22,7 @@ export interface EditProfileScreenProps {
 }
 
 export default function EditProfileScreen({ onBack }: EditProfileScreenProps) {
+  const insets = useSafeInsets();
   const user = useAuthStore((s) => s.user);
   const updateProfile = useAuthStore((s) => s.updateProfile);
   const { triggerBreathTick, triggerPhaseChange } = useHaptics();
@@ -107,7 +109,7 @@ export default function EditProfileScreen({ onBack }: EditProfileScreenProps) {
   );
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
       {/* Top Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -319,8 +321,8 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingHorizontal: 22,
     paddingTop: 16,
-    paddingBottom: 40,
-    minHeight: '100%',
+    paddingBottom: 80,
+    flexGrow: 1,
   },
   avatarSection: {
     alignItems: 'center',

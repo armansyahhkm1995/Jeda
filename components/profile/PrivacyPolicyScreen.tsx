@@ -3,14 +3,16 @@ import { View, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import Typography from '../ui/Typography';
 import { COLORS } from '../../constants/theme';
+import { useSafeInsets } from '../../hooks/useSafeInsets';
 
 export interface PrivacyPolicyScreenProps {
   onBack: () => void;
 }
 
 export default function PrivacyPolicyScreen({ onBack }: PrivacyPolicyScreenProps) {
+  const insets = useSafeInsets();
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -223,7 +225,7 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingHorizontal: 22,
     paddingTop: 20,
-    paddingBottom: 40,
+    paddingBottom: 80,
   },
   legalBadgeCard: {
     backgroundColor: '#EDF5EE',

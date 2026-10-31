@@ -4,6 +4,7 @@ import Svg, { Path } from 'react-native-svg';
 import Typography from '../ui/Typography';
 import { COLORS } from '../../constants/theme';
 import { useHaptics } from '../../hooks/useHaptics';
+import { useSafeInsets } from '../../hooks/useSafeInsets';
 
 export interface AboutScreenProps {
   onBack: () => void;
@@ -16,6 +17,7 @@ export default function AboutScreen({
   onOpenPrivacyPolicy,
   onOpenLicense,
 }: AboutScreenProps) {
+  const insets = useSafeInsets();
   const { triggerBreathTick } = useHaptics();
 
   const handlePressPrivacy = () => {
@@ -29,7 +31,7 @@ export default function AboutScreen({
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -194,7 +196,7 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingHorizontal: 22,
     paddingTop: 36,
-    paddingBottom: 40,
+    paddingBottom: 80,
     alignItems: 'center',
   },
   brandSection: {

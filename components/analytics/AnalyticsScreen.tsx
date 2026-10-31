@@ -50,7 +50,7 @@ export default function AnalyticsScreen() {
   const isFiltered = signalFilter !== 'all' || intensityFilter !== 'all';
 
   return (
-    <ScreenWrapper scrollable style={styles.container}>
+    <ScreenWrapper scrollable withTabBar style={styles.container}>
       {/* Header Halaman sesuai Screenshot 1 & 2 */}
       <View style={styles.header}>
         <Typography variant="h1" style={styles.screenTitle}>

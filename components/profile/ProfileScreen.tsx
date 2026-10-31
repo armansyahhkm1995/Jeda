@@ -26,6 +26,7 @@ import LicenseScreen from './LicenseScreen';
 import { COLORS, SPACING, RADIUS } from '../../constants/theme';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useHaptics } from '../../hooks/useHaptics';
+import { useSafeInsets } from '../../hooks/useSafeInsets';
 
 type SubScreen =
   | 'main'
@@ -44,6 +45,7 @@ const TIME_PRESETS = [
 ];
 
 export default function ProfileScreen() {
+  const insets = useSafeInsets();
   const router = useRouter();
   const [currentSubScreen, setCurrentSubScreen] = useState<SubScreen>('main');
   const [privacyPolicyOrigin, setPrivacyPolicyOrigin] = useState<'about' | 'privacy_data'>('about');
@@ -204,9 +206,9 @@ export default function ProfileScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: insets.top }]}>
       <ScrollView
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[styles.scrollContent, { paddingBottom: insets.bottom + 100 }]}
         showsVerticalScrollIndicator={false}
       >
         {/* Profile Header Row */}

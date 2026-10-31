@@ -178,7 +178,6 @@ export default function CheckinFormScreen() {
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: SPACING.lg,
-    justifyContent: 'space-between',
   },
   header: {
     paddingTop: SPACING.md,
@@ -228,8 +227,9 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   footer: {
-    paddingVertical: SPACING.lg,
-    gap: 8,
+    marginTop: SPACING.xl,
+    paddingBottom: SPACING.xxl,
+    gap: 12,
   },
   laterButton: {
     minHeight: 46,

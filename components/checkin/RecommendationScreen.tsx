@@ -136,7 +136,6 @@ export default function RecommendationScreen() {
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: SPACING.lg,
-    justifyContent: 'space-between',
   },
   content: {
     paddingTop: SPACING.md,
@@ -186,7 +185,8 @@ const styles = StyleSheet.create({
     borderRadius: RADIUS.pill,
   },
   footer: {
-    paddingVertical: SPACING.lg,
+    marginTop: SPACING.xl,
+    paddingBottom: SPACING.xxl,
     gap: SPACING.xs,
   },
   laterButton: {

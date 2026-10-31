@@ -20,6 +20,7 @@ export interface ScreenWrapperProps {
   backgroundColor?: string;
   withTopInset?: boolean;
   withBottomInset?: boolean;
+  withTabBar?: boolean;
 }
 
 export default function ScreenWrapper({
@@ -30,34 +31,50 @@ export default function ScreenWrapper({
   backgroundColor = COLORS.cream[200],
   withTopInset = true,
   withBottomInset = true,
+  withTabBar = false,
 }: ScreenWrapperProps) {
   const { top, bottom, left, right } = useSafeInsets();
   useAppState();
 
-  const containerStyle: ViewStyle = {
-    flex: 1,
-    backgroundColor,
-    paddingTop: withTopInset ? top : 0,
-    paddingBottom: withBottomInset ? bottom : 0,
-    paddingLeft: left,
-    paddingRight: right,
-  };
+  const flattened = StyleSheet.flatten(style) || {};
 
   if (scrollable) {
-    // Separate layout properties that must be applied to contentContainerStyle on web & native
-    const flattened = StyleSheet.flatten(style) || {};
     const {
       justifyContent,
       alignItems,
       alignContent,
       flexDirection,
       flexWrap,
-      ...scrollStyle
+      padding,
+      paddingHorizontal,
+      paddingVertical,
+      paddingTop: stylePadTop,
+      paddingBottom: stylePadBottom,
+      paddingLeft: stylePadLeft,
+      paddingRight: stylePadRight,
+      ...outerStyle
     } = flattened;
+
+    const baseTop = withTopInset ? top : 0;
+    const rawTop = stylePadTop ?? paddingVertical ?? padding ?? baseTop;
+    const finalTop = typeof rawTop === 'number' ? rawTop : (Number(rawTop) || 0);
+
+    // Tab bar clearance: at least 88px if withTabBar is true
+    const baseBottom = withBottomInset ? bottom : 0;
+    const extraBottom = withTabBar ? 88 : 32;
+    const rawBottom = stylePadBottom ?? paddingVertical ?? padding ?? baseBottom;
+    const numBottom = typeof rawBottom === 'number' ? rawBottom : (Number(rawBottom) || 0);
+    const finalBottom = numBottom + extraBottom;
+
+    const finalLeft = stylePadLeft ?? paddingHorizontal ?? padding ?? left;
+    const finalRight = stylePadRight ?? paddingHorizontal ?? padding ?? right;
 
     const layoutStyle: ViewStyle = {
       flexGrow: 1,
-      ...(justifyContent ? { justifyContent } : {}),
+      paddingTop: finalTop,
+      paddingBottom: finalBottom,
+      paddingLeft: finalLeft,
+      paddingRight: finalRight,
       ...(alignItems ? { alignItems } : {}),
       ...(alignContent ? { alignContent } : {}),
       ...(flexDirection ? { flexDirection } : {}),
@@ -71,16 +88,26 @@ export default function ScreenWrapper({
       >
         <StatusBar barStyle="dark-content" backgroundColor={backgroundColor} />
         <ScrollView
-          style={[containerStyle, scrollStyle]}
+          style={[{ flex: 1, backgroundColor }, outerStyle]}
           contentContainerStyle={[layoutStyle, contentContainerStyle]}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
+          bounces={true}
         >
           {children}
         </ScrollView>
       </KeyboardAvoidingView>
     );
   }
+
+  const containerStyle: ViewStyle = {
+    flex: 1,
+    backgroundColor,
+    paddingTop: withTopInset ? top : 0,
+    paddingBottom: (withBottomInset ? bottom : 0) + (withTabBar ? 88 : 0),
+    paddingLeft: left,
+    paddingRight: right,
+  };
 
   return (
     <KeyboardAvoidingView

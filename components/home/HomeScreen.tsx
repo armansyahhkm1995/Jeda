@@ -51,7 +51,7 @@ export default function HomeScreen() {
   const userName = user?.name ? user.name.split(' ')[0].toUpperCase() : 'RANI';
 
   return (
-    <ScreenWrapper scrollable style={styles.container}>
+    <ScreenWrapper scrollable withTabBar style={styles.container}>
       {/* 1. Top Greeting Section */}
       <View style={styles.greetingHeader}>
         <Typography variant="caption" color={COLORS.brand.primary} style={styles.greetingTime}>

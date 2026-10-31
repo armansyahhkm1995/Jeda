@@ -130,7 +130,7 @@ export default function LibraryScreen() {
     searchQuery.trim().length > 0;
 
   return (
-    <ScreenWrapper scrollable style={styles.container}>
+    <ScreenWrapper scrollable withTabBar style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <Typography variant="captionMedium" style={styles.tagline}>

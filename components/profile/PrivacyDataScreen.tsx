@@ -17,6 +17,7 @@ import { useAuthStore } from '../../store/useAuthStore';
 import { useCheckinStore } from '../../store/useCheckinStore';
 import { useAnalyticsStore } from '../../store/useAnalyticsStore';
 import { useHaptics } from '../../hooks/useHaptics';
+import { useSafeInsets } from '../../hooks/useSafeInsets';
 
 export interface PrivacyDataScreenProps {
   onBack: () => void;
@@ -28,6 +29,7 @@ export default function PrivacyDataScreen({
   onBack,
   onLogout,
 }: PrivacyDataScreenProps) {
+  const insets = useSafeInsets();
   const router = useRouter();
   const user = useAuthStore((s) => s.user);
   const logout = useAuthStore((s) => s.logout);
@@ -104,7 +106,7 @@ export default function PrivacyDataScreen({
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -438,7 +440,7 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingHorizontal: 20,
     paddingTop: 16,
-    paddingBottom: 40,
+    paddingBottom: 80,
   },
   pdpBanner: {
     backgroundColor: '#EDF5EE',
