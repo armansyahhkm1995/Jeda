@@ -17,6 +17,7 @@ import { normalizeSignalKey } from '../../utils/ranking-algorithm';
 import { TANDA_TUBUH_MAPPING } from '../../constants/body-signals';
 import { BodySignalKey } from '../../types';
 import { getTodayIsoString } from '../../utils/date';
+import { FEATURE_FLAGS } from '../../constants/feature-flags';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -79,13 +80,15 @@ export default function HomeScreen() {
         </View>
       )}
 
-      {/* 4B. Status Pasangan Terhubung (Realtime Sync) */}
-      <View style={styles.section}>
-        <PartnerStatusCard />
-      </View>
+      {/* 4B. Status Pasangan Terhubung (Realtime Sync - di-hide untuk peluncuran v1.0) */}
+      {FEATURE_FLAGS.ENABLE_PARTNER_SYNC && (
+        <View style={styles.section}>
+          <PartnerStatusCard />
+        </View>
+      )}
 
-      {/* 5. Mode Pasangan + Analitik (PRO Feature Card - Hilang otomatis jika sudah PRO) */}
-      {!user?.isPro && (
+      {/* 5. Mode Pasangan + Analitik (PRO Feature Card - di-hide untuk peluncuran v1.0) */}
+      {FEATURE_FLAGS.ENABLE_PRO_MODE && !user?.isPro && (
         <View style={styles.section}>
           <PartnerModePreview />
         </View>

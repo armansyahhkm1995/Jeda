@@ -13,6 +13,7 @@ import { useCheckinStore } from '../../store/useCheckinStore';
 import { getTodayIsoString } from '../../utils/date';
 import { useHaptics } from '../../hooks/useHaptics';
 import { BodySignalKey, IntensityLevel } from '../../types';
+import { FEATURE_FLAGS } from '../../constants/feature-flags';
 
 export default function AnalyticsScreen() {
   const [activeTab, setActiveTab] = useState<'kalender' | 'tren'>('kalender');
@@ -58,47 +59,49 @@ export default function AnalyticsScreen() {
         </Typography>
       </View>
 
-      {/* Segmented Control Switcher Pills: [ Kalender | Tren PRO ] dengan background hijau saat aktif */}
-      <View style={styles.segmentedContainer}>
-        <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={() => handleSwitchTab('kalender')}
-          style={[styles.segmentBtn, activeTab === 'kalender' && styles.segmentBtnActive]}
-          accessibilityRole="tab"
-          accessibilityState={{ selected: activeTab === 'kalender' }}
-        >
-          <Typography
-            variant="bodyMedium"
-            style={[
-              styles.segmentText,
-              activeTab === 'kalender' && styles.segmentTextActive,
-            ]}
+      {/* Segmented Control Switcher Pills: [ Kalender | Tren PRO ] - Di-hide jika flag PRO dinonaktifkan */}
+      {FEATURE_FLAGS.ENABLE_PRO_MODE && (
+        <View style={styles.segmentedContainer}>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => handleSwitchTab('kalender')}
+            style={[styles.segmentBtn, activeTab === 'kalender' && styles.segmentBtnActive]}
+            accessibilityRole="tab"
+            accessibilityState={{ selected: activeTab === 'kalender' }}
           >
-            Kalender
-          </Typography>
-        </TouchableOpacity>
+            <Typography
+              variant="bodyMedium"
+              style={[
+                styles.segmentText,
+                activeTab === 'kalender' && styles.segmentTextActive,
+              ]}
+            >
+              Kalender
+            </Typography>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={() => handleSwitchTab('tren')}
-          style={[styles.segmentBtn, activeTab === 'tren' && styles.segmentBtnActive]}
-          accessibilityRole="tab"
-          accessibilityState={{ selected: activeTab === 'tren' }}
-        >
-          <Typography
-            variant="bodyMedium"
-            style={[
-              styles.segmentText,
-              activeTab === 'tren' && styles.segmentTextActive,
-            ]}
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => handleSwitchTab('tren')}
+            style={[styles.segmentBtn, activeTab === 'tren' && styles.segmentBtnActive]}
+            accessibilityRole="tab"
+            accessibilityState={{ selected: activeTab === 'tren' }}
           >
-            Tren PRO
-          </Typography>
-        </TouchableOpacity>
-      </View>
+            <Typography
+              variant="bodyMedium"
+              style={[
+                styles.segmentText,
+                activeTab === 'tren' && styles.segmentTextActive,
+              ]}
+            >
+              Tren PRO
+            </Typography>
+          </TouchableOpacity>
+        </View>
+      )}
 
-      {/* Konten Tab */}
-      {activeTab === 'kalender' ? (
+      {/* Konten Tab (Jika PRO di-hide, selalu tampilkan Kalender) */}
+      {(!FEATURE_FLAGS.ENABLE_PRO_MODE || activeTab === 'kalender') ? (
         <View style={styles.tabContent}>
           {/* Kalender Bulanan Interaktif dengan navigasi Tahun dan Bulan lebih besar & kontras tinggi */}
           <CalendarView

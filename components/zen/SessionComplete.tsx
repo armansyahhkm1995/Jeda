@@ -11,6 +11,7 @@ import { useSessionStore } from '../../store/useSessionStore';
 import { useAnalyticsStore } from '../../store/useAnalyticsStore';
 import { useHaptics } from '../../hooks/useHaptics';
 import { getTodayIsoString, formatTime } from '../../utils/date';
+import { FEATURE_FLAGS } from '../../constants/feature-flags';
 
 export default function SessionComplete() {
   const router = useRouter();
@@ -80,8 +81,8 @@ export default function SessionComplete() {
           Amati sensasi rileks di dadamu. Korteks prefrontal kini kembali memegang kendali pikiranmu.
         </Typography>
 
-        {/* Partner Notification Card (if partner linked) */}
-        {isPartnerLinked && (
+        {/* Partner Notification Card (if partner linked - di-hide jika flag false) */}
+        {FEATURE_FLAGS.ENABLE_PARTNER_SYNC && isPartnerLinked && (
           <Card variant="sage" padding="md" style={styles.partnerCard}>
             <View style={styles.partnerInfo}>
               <Typography variant="bodyMedium" color={COLORS.sage[900]}>

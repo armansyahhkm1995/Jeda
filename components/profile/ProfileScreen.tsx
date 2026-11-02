@@ -27,6 +27,7 @@ import { COLORS, SPACING, RADIUS } from '../../constants/theme';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useHaptics } from '../../hooks/useHaptics';
 import { useSafeInsets } from '../../hooks/useSafeInsets';
+import { FEATURE_FLAGS } from '../../constants/feature-flags';
 
 type SubScreen =
   | 'main'
@@ -249,8 +250,8 @@ export default function ProfileScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Plan Cards: Jika sudah PRO, jeda gratis & pilihan menjadi pro HILANG, diganti Jeda PRO Aktif */}
-        {!isPro ? (
+        {/* Plan Cards: Di-hide pada versi 1.0 (MVP) */}
+        {FEATURE_FLAGS.ENABLE_PRO_MODE && (!isPro ? (
           <>
             {/* Plan Card 1: Paket Saat Ini (Jeda Gratis) */}
             <View style={styles.currentPlanCard}>
@@ -369,7 +370,7 @@ export default function ProfileScreen() {
               </Typography>
             </TouchableOpacity>
           </View>
-        )}
+        ))}
 
         {/* Section: Pengaturan */}
         <View style={styles.settingsSection}>
@@ -526,69 +527,72 @@ export default function ProfileScreen() {
               </Svg>
             </TouchableOpacity>
 
-            <View style={styles.itemDivider} />
+            {/* Item 5: Mode Pasangan (PRO) - Di-hide pada versi 1.0 (MVP) */}
+            {FEATURE_FLAGS.ENABLE_PARTNER_SYNC && (
+              <>
+                <View style={styles.itemDivider} />
+                <TouchableOpacity
+                  style={styles.settingNavRow}
+                  activeOpacity={0.7}
+                  onPress={() => {
+                    triggerButtonPress();
+                    if (isPro) {
+                      // Jika sudah jadi anggota pro, tidak lagi diarahkan ke lihat detail mode pro, tapi langsung ke alur Mode Pasangan
+                      router.push({ pathname: '/jeda-pro', params: { step: 'pro_active' } } as any);
+                    } else {
+                      router.push('/jeda-pro' as any);
+                    }
+                  }}
+                  accessibilityRole="button"
+                >
+                  <View style={styles.settingIconCircle}>
+                    <Svg width={18} height={18} viewBox="0 0 24 24" fill="none">
+                      <Path
+                        d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"
+                        stroke="#2D5A38"
+                        strokeWidth={1.8}
+                      />
+                      <Circle cx="9" cy="7" r="4" stroke="#2D5A38" strokeWidth={1.8} />
+                      <Path
+                        d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"
+                        stroke="#2D5A38"
+                        strokeWidth={1.8}
+                      />
+                    </Svg>
+                  </View>
 
-            {/* Item 5: Mode Pasangan (PRO) */}
-            <TouchableOpacity
-              style={styles.settingNavRow}
-              activeOpacity={0.7}
-              onPress={() => {
-                triggerButtonPress();
-                if (isPro) {
-                  // Jika sudah jadi anggota pro, tidak lagi diarahkan ke lihat detail mode pro, tapi langsung ke alur Mode Pasangan
-                  router.push({ pathname: '/jeda-pro', params: { step: 'pro_active' } } as any);
-                } else {
-                  router.push('/jeda-pro' as any);
-                }
-              }}
-              accessibilityRole="button"
-            >
-              <View style={styles.settingIconCircle}>
-                <Svg width={18} height={18} viewBox="0 0 24 24" fill="none">
-                  <Path
-                    d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"
-                    stroke="#2D5A38"
-                    strokeWidth={1.8}
-                  />
-                  <Circle cx="9" cy="7" r="4" stroke="#2D5A38" strokeWidth={1.8} />
-                  <Path
-                    d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"
-                    stroke="#2D5A38"
-                    strokeWidth={1.8}
-                  />
-                </Svg>
-              </View>
-
-              <View style={styles.settingTextCol}>
-                <View style={styles.coupleTitleRow}>
-                  <Typography variant="bodyMedium" style={styles.settingItemTitle}>
-                    Mode Pasangan
-                  </Typography>
-                  <View style={styles.smallProBadge}>
-                    <Typography variant="caption" style={styles.smallProBadgeText}>
-                      PRO
+                  <View style={styles.settingTextCol}>
+                    <View style={styles.coupleTitleRow}>
+                      <Typography variant="bodyMedium" style={styles.settingItemTitle}>
+                        Mode Pasangan
+                      </Typography>
+                      <View style={styles.smallProBadge}>
+                        <Typography variant="caption" style={styles.smallProBadgeText}>
+                          PRO
+                        </Typography>
+                      </View>
+                    </View>
+                    <Typography variant="caption" style={styles.settingItemSub}>
+                      {user?.partnerLinked
+                        ? `Terhubung (${user?.partnerName || 'Pasangan'})`
+                        : user?.isPro
+                        ? 'Jeda PRO Aktif'
+                        : 'Belum terhubung'}
                     </Typography>
                   </View>
-                </View>
-                <Typography variant="caption" style={styles.settingItemSub}>
-                  {user?.partnerLinked
-                    ? `Terhubung (${user?.partnerName || 'Pasangan'})`
-                    : user?.isPro
-                    ? 'Jeda PRO Aktif'
-                    : 'Belum terhubung'}
-                </Typography>
-              </View>
 
-              <Svg width={18} height={18} viewBox="0 0 24 24" fill="none">
-                <Path
-                  d="M9 18L15 12L9 6"
-                  stroke="#8A948C"
-                  strokeWidth={2}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </Svg>
-            </TouchableOpacity>
+                  <Svg width={18} height={18} viewBox="0 0 24 24" fill="none">
+                    <Path
+                      d="M9 18L15 12L9 6"
+                      stroke="#8A948C"
+                      strokeWidth={2}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </Svg>
+                </TouchableOpacity>
+              </>
+            )}
 
             <View style={styles.itemDivider} />
 
